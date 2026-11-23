@@ -99,13 +99,6 @@ function getPackagingIconDirectory() {
     : join(__dirname, '..', 'app', 'static', 'logos', 'prod')
 }
 
-/**
- * The icon Squirrel downloads at install time for shortcuts and Installed
- * apps. It must be this project's icon, not GitHub Desktop's.
- */
-const WindowsIconUrl =
-  'https://raw.githubusercontent.com/Blake-McCullough/github-desktop-custom-gitlab-ci/main/app/static/logos/prod/icon-logo.ico'
-
 function packageWindows() {
   const iconSource = join(getPackagingIconDirectory(), 'icon-logo.ico')
 
@@ -126,7 +119,10 @@ function packageWindows() {
     process.exit(1)
   }
 
-  const iconUrl = WindowsIconUrl
+  // Squirrel downloads this at install time for shortcuts and Installed
+  // apps, so it must be this project's icon, not GitHub Desktop's.
+  const iconUrl =
+    'https://raw.githubusercontent.com/Blake-McCullough/github-desktop-custom-gitlab-ci/main/app/static/logos/prod/icon-logo.ico'
 
   const nugetPkgName = getWindowsIdentifierName()
   const options: electronInstaller.Options = {
