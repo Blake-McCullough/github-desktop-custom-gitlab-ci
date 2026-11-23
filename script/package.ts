@@ -88,8 +88,26 @@ function packageOSX() {
   )
 }
 
+/**
+ * The icons for the installer. `npm run package` runs without NODE_ENV, so
+ * the release channel reads as development; only an explicit development
+ * build (as for its `-dev` executable name) should get the dev icons.
+ */
+function getPackagingIconDirectory() {
+  return process.env.NODE_ENV === 'development'
+    ? getIconDirectory()
+    : join(__dirname, '..', 'app', 'static', 'logos', 'prod')
+}
+
+/**
+ * The icon Squirrel downloads at install time for shortcuts and Installed
+ * apps. It must be this project's icon, not GitHub Desktop's.
+ */
+const WindowsIconUrl =
+  'https://raw.githubusercontent.com/Blake-McCullough/github-desktop-custom-gitlab-ci/main/app/static/logos/prod/icon-logo.ico'
+
 function packageWindows() {
-  const iconSource = join(getIconDirectory(), 'icon-logo.ico')
+  const iconSource = join(getPackagingIconDirectory(), 'icon-logo.ico')
 
   if (!existsSync(iconSource)) {
     console.error(`expected setup icon not found at location: ${iconSource}`)
@@ -108,7 +126,7 @@ function packageWindows() {
     process.exit(1)
   }
 
-  const iconUrl = 'https://desktop.githubusercontent.com/app-icon.ico'
+  const iconUrl = WindowsIconUrl
 
   const nugetPkgName = getWindowsIdentifierName()
   const options: electronInstaller.Options = {
